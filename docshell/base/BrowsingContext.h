@@ -191,6 +191,7 @@ enum class ExplicitActiveStatus : uint8_t {
   FIELD(ServiceWorkersTestingEnabled, bool)                                   \
   FIELD(MediumOverride, nsString)                                             \
   FIELD(PrefersColorSchemeOverride, mozilla::dom::PrefersColorSchemeOverride) \
+  FIELD(PrefersReducedMotionOverride, mozilla::dom::PrefersReducedMotionOverride) \
   FIELD(DisplayMode, mozilla::dom::DisplayMode)                               \
   /* True if the top level browsing context owns a main media controller */   \
   FIELD(HasMainMediaController, bool)                                         \
@@ -847,6 +848,10 @@ class BrowsingContext : public nsILoadContext, public nsWrapperCache {
     return GetPrefersColorSchemeOverride();
   }
 
+  dom::PrefersReducedMotionOverride PrefersReducedMotionOverride() const {
+    return GetPrefersReducedMotionOverride();
+  }
+
   void FlushSessionStore();
 
  protected:
@@ -960,6 +965,14 @@ class BrowsingContext : public nsILoadContext, public nsWrapperCache {
 
   void DidSet(FieldIndex<IDX_PrefersColorSchemeOverride>,
               dom::PrefersColorSchemeOverride aOldValue);
+
+  bool CanSet(FieldIndex<IDX_PrefersReducedMotionOverride>,
+              dom::PrefersReducedMotionOverride, ContentParent*) {
+    return IsTop();
+  }
+
+  void DidSet(FieldIndex<IDX_PrefersReducedMotionOverride>,
+              dom::PrefersReducedMotionOverride aOldValue);
 
   void DidSet(FieldIndex<IDX_MediumOverride>, nsString&& aOldValue);
 

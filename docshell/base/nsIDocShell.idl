@@ -883,6 +883,13 @@ interface nsIDocShell : nsIDocShellTreeItem
   };
   [infallible] attribute nsIDocShell_ColorSchemeOverride colorSchemeOverride;
 
+  cenum ReducedMotionOverride : 8 {
+    REDUCED_MOTION_OVERRIDE_REDUCE,
+    REDUCED_MOTION_OVERRIDE_NO_PREFERENCE,
+    REDUCED_MOTION_OVERRIDE_NONE, /* This clears the override. */
+  };
+  [infallible] attribute nsIDocShell_ReducedMotionOverride reducedMotionOverride;
+
   void setGeolocationOverride(in nsIDOMGeoPosition position);
 
   /**

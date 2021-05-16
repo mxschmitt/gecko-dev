@@ -17136,6 +17136,39 @@ StylePrefersColorScheme Document::PrefersColorScheme(
   return dark ? StylePrefersColorScheme::Dark : StylePrefersColorScheme::Light;
 }
 
+bool Document::PrefersReducedMotion() const {
+  auto* docShell = static_cast<nsDocShell*>(GetDocShell());
+  nsIDocShell::ReducedMotionOverride reducedMotion;
+  if (docShell && docShell->GetReducedMotionOverride(&reducedMotion) == NS_OK &&
+      reducedMotion != nsIDocShell::REDUCED_MOTION_OVERRIDE_NONE) {
+    switch (reducedMotion) {
+      case nsIDocShell::REDUCED_MOTION_OVERRIDE_REDUCE:
+        return true;
+      case nsIDocShell::REDUCED_MOTION_OVERRIDE_NO_PREFERENCE:
+        return false;
+      case nsIDocShell::REDUCED_MOTION_OVERRIDE_NONE:
+        break;
+    };
+  }
+
+  if (auto* bc = GetBrowsingContext()) {
+    switch (bc->Top()->PrefersReducedMotionOverride()) {
+      case dom::PrefersReducedMotionOverride::Reduce:
+        return true;
+      case dom::PrefersReducedMotionOverride::No_preference:
+        return false;
+      case dom::PrefersReducedMotionOverride::None:
+      case dom::PrefersReducedMotionOverride::EndGuard_:
+        break;
+    }
+  }
+
+  if (nsContentUtils::ShouldResistFingerprinting(this)) {
+    return false;
+  }
+  return LookAndFeel::GetInt(LookAndFeel::IntID::PrefersReducedMotion, 0) == 1;
+}
+
 // static
 bool Document::UseOverlayScrollbars(const Document* aDocument) {
   BrowsingContext* bc = aDocument ? aDocument->GetBrowsingContext() : nullptr;
