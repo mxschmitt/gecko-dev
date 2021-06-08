@@ -246,10 +246,7 @@ nsAtom* Gecko_MediaFeatures_GetOperatingSystemVersion(
 }
 
 bool Gecko_MediaFeatures_PrefersReducedMotion(const Document* aDocument) {
-  if (nsContentUtils::ShouldResistFingerprinting(aDocument)) {
-    return false;
-  }
-  return LookAndFeel::GetInt(LookAndFeel::IntID::PrefersReducedMotion, 0) == 1;
+  return aDocument->PrefersReducedMotion();
 }
 
 StylePrefersColorScheme Gecko_MediaFeatures_PrefersColorScheme(
