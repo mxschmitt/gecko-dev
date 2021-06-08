@@ -890,6 +890,13 @@ interface nsIDocShell : nsIDocShellTreeItem
   };
   [infallible] attribute nsIDocShell_ReducedMotionOverride reducedMotionOverride;
 
+  cenum ForcedColorsOverride : 8 {
+    FORCED_COLORS_OVERRIDE_ACTIVE,
+    FORCED_COLORS_OVERRIDE_NONE,
+    FORCED_COLORS_OVERRIDE_NO_OVERRIDE, /* This clears the override. */
+  };
+  [infallible] attribute nsIDocShell_ForcedColorsOverride forcedColorsOverride;
+
   void setGeolocationOverride(in nsIDOMGeoPosition position);
 
   /**

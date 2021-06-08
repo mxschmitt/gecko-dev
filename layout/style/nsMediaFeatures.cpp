@@ -249,6 +249,10 @@ bool Gecko_MediaFeatures_PrefersReducedMotion(const Document* aDocument) {
   return aDocument->PrefersReducedMotion();
 }
 
+bool Gecko_MediaFeatures_ForcedColors(const Document* aDocument) {
+  return aDocument->ForcedColors();
+}
+
 StylePrefersColorScheme Gecko_MediaFeatures_PrefersColorScheme(
     const Document* aDocument) {
   return aDocument->PrefersColorScheme();

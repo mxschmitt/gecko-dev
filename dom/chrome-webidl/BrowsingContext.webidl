@@ -62,6 +62,15 @@ enum PrefersReducedMotionOverride {
 };
 
 /**
+ * CSS forced-colors values.
+ */
+enum ForcedColorsOverride {
+  "none",
+  "active",
+  "no-override",  /* This clears the override. */
+};
+
+/**
  * Allowed overrides of platform/pref default behaviour for touch events.
  */
 enum TouchEventsOverride {
@@ -186,6 +195,9 @@ interface BrowsingContext {
 
   // Reduced-Motion simulation, for DevTools.
   [SetterThrows] attribute PrefersReducedMotionOverride prefersReducedMotionOverride;
+
+  // Forced-Colors simulation, for DevTools.
+  [SetterThrows] attribute ForcedColorsOverride forcedColorsOverride;
 
   /**
    * A unique identifier for the browser element that is hosting this

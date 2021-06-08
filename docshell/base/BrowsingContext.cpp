@@ -113,6 +113,13 @@ struct ParamTraits<mozilla::dom::PrefersReducedMotionOverride>
           mozilla::dom::PrefersReducedMotionOverride::EndGuard_> {};
 
 template <>
+struct ParamTraits<mozilla::dom::ForcedColorsOverride>
+    : public ContiguousEnumSerializer<
+          mozilla::dom::ForcedColorsOverride,
+          mozilla::dom::ForcedColorsOverride::None,
+          mozilla::dom::ForcedColorsOverride::EndGuard_> {};
+
+template <>
 struct ParamTraits<mozilla::dom::ExplicitActiveStatus>
     : public ContiguousEnumSerializer<
           mozilla::dom::ExplicitActiveStatus,
@@ -2648,6 +2655,23 @@ void BrowsingContext::DidSet(FieldIndex<IDX_PrefersReducedMotionOverride>,
                              dom::PrefersReducedMotionOverride aOldValue) {
   MOZ_ASSERT(IsTop());
   if (PrefersReducedMotionOverride() == aOldValue) {
+    return;
+  }
+  PreOrderWalk([&](BrowsingContext* aContext) {
+    if (nsIDocShell* shell = aContext->GetDocShell()) {
+      if (nsPresContext* pc = shell->GetPresContext()) {
+        pc->MediaFeatureValuesChanged(
+            {MediaFeatureChangeReason::SystemMetricsChange},
+            MediaFeatureChangePropagation::JustThisDocument);
+      }
+    }
+  });
+}
+
+void BrowsingContext::DidSet(FieldIndex<IDX_ForcedColorsOverride>,
+                             dom::ForcedColorsOverride aOldValue) {
+  MOZ_ASSERT(IsTop());
+  if (ForcedColorsOverride() == aOldValue) {
     return;
   }
   PreOrderWalk([&](BrowsingContext* aContext) {
