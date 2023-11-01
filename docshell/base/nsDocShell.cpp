@@ -3300,16 +3300,15 @@ nsDocShell::GetLanguageOverride(nsAString& aLanguageOverride) {
 
 static void SetIcuLocale(const nsAString& aLanguageOverride) {
   icu::Locale locale(NS_LossyConvertUTF16toASCII(aLanguageOverride).get());
-  if (icu::Locale::getDefault() == locale)
-    return;
-  UErrorCode error_code = U_ZERO_ERROR;
-  const char* lang = locale.getLanguage();
-  if (lang != nullptr && *lang != '\0') {
-    icu::Locale::setDefault(locale, error_code);
-  } else {
-    fprintf(stderr, "SetIcuLocale Failed to set the ICU default locale to %s\n", NS_LossyConvertUTF16toASCII(aLanguageOverride).get());
+  if (icu::Locale::getDefault() != locale) {
+    UErrorCode error_code = U_ZERO_ERROR;
+    const char* lang = locale.getLanguage();
+    if (lang != nullptr && *lang != '\0') {
+      icu::Locale::setDefault(locale, error_code);
+    } else {
+      fprintf(stderr, "SetIcuLocale Failed to set the ICU default locale to %s\n", NS_LossyConvertUTF16toASCII(aLanguageOverride).get());
+    }
   }
-
   AutoJSAPI jsapi;
   jsapi.Init();
   JSContext* cx = jsapi.cx();
